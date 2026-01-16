@@ -82,7 +82,7 @@ Se puede acceder a la ruta `/roles` para ver todos los roles disponibles en el s
 ## 6. Vista creadas: 
    ### localhost:8000 
    ### localhost:8000/roles
-    -se ha creado el archivo css y app.blade.php con header y footer para obtener un código más limpio
+-Se ha creado el archivo css y app.blade.php con header y footer para obtener un código más limpio
    
 ## 7. Próximas funcionalidades:
 - Registro de nuevos usuarios con asignación de roles múltiples
