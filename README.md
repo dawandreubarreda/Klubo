@@ -79,6 +79,11 @@ Se puede acceder a la ruta `/roles` para ver todos los roles disponibles en el s
    php artisan migrate
    php artisan db:seed --class=RoleSeeder
    php artisan serve
-2. **Vista creadas: **
-   localhost:8000/roles
+## 6. Vista creadas: 
+   ### localhost:8000/roles
+## 7. Próximas funcionalidades:
+- Vista principal
+- Registro de nuevos usuarios con asignación de roles múltiples
+- Autenticación (login/logout)
+- Gestión de equipos y categorías
    
