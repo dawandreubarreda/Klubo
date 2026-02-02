@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>@yield('title', 'Klubo')</title>
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    </head>
-<body>
-    <header>
-        <div class="logo">Klubo</div>
-        <nav>
-            <a href="/">Inicio</a>
-            <a href="/roles">Roles</a>
-            <a href="/login">Iniciar sesión</a>
-        </nav>
-    </header>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <title>{{ config('app.name', 'Klubo') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
+    
+    <!-- Tu CSS externo -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    @include('layouts.navigation')
+
+    <!-- Page Content -->
     <main>
         @yield('content')
     </main>
 
+    <!-- Footer -->
     <footer>
-        <p>Proyecto Klubo • Desarrollado por estudiantes de DAW •
+        <p>Proyecto Klubo • Desarrollado por estudiantes de DAW • 
            <a href="https://github.com/dawandreubarreda/Klubo" target="_blank">GitHub</a>
         </p>
     </footer>

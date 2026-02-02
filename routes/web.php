@@ -1,10 +1,39 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Admin\UserController; // ← Ya importado
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/roles', [RoleController::class, 'index']);
+Route::get('/roles', [RoleController::class, 'index'])->name('roles');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Rutas de administración
+Route::middleware(['auth', 'verified'])->group(function () {
+    // ✅ Usamos UserController directamente (gracias al "use" arriba)
+    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
+    Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+
+    Route::get('/admin/teams', function () {
+        return "Gestión de equipos (próximamente)";
+    });
+
+    Route::get('/admin/news', function () {
+        return "Tablón de anuncios (próximamente)";
+    });
+});
+
+require __DIR__.'/auth.php';
