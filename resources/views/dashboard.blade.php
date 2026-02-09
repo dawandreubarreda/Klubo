@@ -9,7 +9,8 @@
         <div class="admin-section">
             <h2>👨‍💼 Área del Administrador</h2>
             <ul>
-                <li><a href="/admin/users">Gestionar usuarios</a></li>
+                <li><a href="{{ route('admin.roles') }}">Gestión de roles</a></li>
+                <li><a href="/admin/profiles">Gestión de perfiles</a></li>
                 <li><a href="/admin/teams">Gestionar equipos</a></li>
                 <li><a href="/admin/news">Gestionar tablón de anuncios</a></li>
             </ul>

@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $users = User::with('roles')->get();
         $roles = Role::all();
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.roles.index', compact('users', 'roles'));
     }
 
     public function update(Request $request, User $user)

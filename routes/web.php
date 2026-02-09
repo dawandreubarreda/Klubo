@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
 // Rutas de administración
 Route::middleware(['auth', 'verified'])->group(function () {
     // ✅ Usamos UserController directamente (gracias al "use" arriba)
-    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
+    Route::get('/admin/roles', [UserController::class, 'index'])->name('admin.roles');
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
 
     Route::get('/admin/teams', function () {

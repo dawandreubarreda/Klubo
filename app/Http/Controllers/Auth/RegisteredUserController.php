@@ -32,14 +32,45 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'dni' => ['required', 'string', 'max:20', 'unique:'.User::class],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-        'birth_date' => ['required', 'date', 'before:today'],
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        'address' => ['nullable', 'string', 'max:255'],
-        'phone' => ['nullable', 'string', 'max:20'],
-    ]);
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:255',
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/'
+            ],
+            'dni' => [
+                'required',
+                'string',
+                'max:20',
+                'unique:users',
+                'regex:/^([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])$/i'
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users'
+            ],
+            'birth_date' => [
+                'required',
+                'date',
+                'before:today',
+                'after:1920-01-01'
+            ],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'address' => ['nullable', 'string', 'max:255'],
+            'phone' => [
+                'nullable',
+                'regex:/^[0-9]{9}$/'
+            ],
+        ], [
+            'dni.regex' => 'El DNI debe tener 8 dígitos y una letra (ej. 12345678Z) o formato NIE (X1234567L).',
+            'phone.regex' => 'El teléfono debe tener exactamente 9 dígitos.',
+            'birth_date.after' => 'La fecha de nacimiento debe ser posterior al 1 de enero de 1920.',
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+        ]);
 
     $user = User::create([
         'name' => $request->name,
@@ -61,4 +92,5 @@ class RegisteredUserController extends Controller
 
     return redirect(RouteServiceProvider::HOME);
 }
+
 }

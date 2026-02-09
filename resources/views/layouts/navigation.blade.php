@@ -6,7 +6,9 @@
         @guest
             <a href="/login">Iniciar sesión</a>
         @else
-            <span>Bienvenido, {{ Auth::user()->name }}</span>
+            <a href="{{ route('dashboard') }}" style="color: white; text-decoration: underline;">
+                Bienvenido, {{ Auth::user()->name }}
+            </a>
             <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                 @csrf
                 <button type="submit" style="background: none; border: none; color: white; text-decoration: underline; cursor: pointer;">Cerrar sesión</button>
