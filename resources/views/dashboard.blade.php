@@ -11,7 +11,8 @@
             <ul>
                 <li><a href="{{ route('admin.roles') }}">Gestión de roles</a></li>
                 <li><a href="/admin/profiles">Gestión de perfiles</a></li>
-                <li><a href="{{ route('admin.seasons.index') }}">Gestionar temporadas y equipos</a></li>
+                <li><a href="{{ route('admin.seasons.index') }}">Gestionar temporadas</a></li>
+                <li><a href="{{ route('admin.teams.index') }}">Gestionar equipos</a></li>
                 <li><a href="/admin/news">Gestionar tablón de anuncios</a></li>
             </ul>
         </div>

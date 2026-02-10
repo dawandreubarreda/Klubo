@@ -23,6 +23,7 @@ class User extends Authenticatable
         'dni',
         'email',
         'birth_date',
+        'gender',
         'address',
         'phone',
         'password',
@@ -50,12 +51,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+    // Relación muchos a muchos con roles
     public function roles()
         {
             return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
         }
+    
+    // Método para verificar si el usuario tiene un rol específico
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    // Relación muchos a muchos con equipos, incluyendo el rol del usuario en cada equipo
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user')
+            ->withPivot('role_in_team')
+            ->withTimestamps();
     }
 }

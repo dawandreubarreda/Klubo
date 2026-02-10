@@ -44,6 +44,16 @@
                     style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
 
+            <div style="margin-bottom: 1rem;">
+                <label for="gender" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Género</label>
+                <select id="gender" name="gender" required style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="">Selecciona...</option>
+                    <option value="masculino" {{ old('gender') == 'masculino' ? 'selected' : '' }}>Masculino</option>
+                    <option value="femenino" {{ old('gender') == 'femenino' ? 'selected' : '' }}>Femenino</option>
+                    <option value="otro" {{ old('gender') == 'otro' ? 'selected' : '' }}>Otro</option>
+                </select>
+            </div>
+
             <!-- Opcional: dirección y teléfono -->
             <div style="margin-bottom: 1rem;">
                 <label for="address" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Dirección</label>

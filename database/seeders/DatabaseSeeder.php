@@ -2,24 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
+     *
+     * Este método se ejecuta cuando haces: php artisan db:seed
+     * Aquí llamamos a otros seeders específicos para cada tabla.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Llamamos a los seeders de roles y categorías
+        // Estos seeders insertan los datos básicos que necesita la aplicación
+        $this->call([
+            \Database\Seeders\RoleSeeder::class,      // Seeder para roles (admin, coach, etc.)
+            \Database\Seeders\CategorySeeder::class, // Seeder para categorías deportivas
         ]);
     }
 }

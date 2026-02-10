@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-//Modelo para representar las temporadas de la liga. Cada temporada tiene un nombre, fecha de inicio y fecha de fin.
-class Season extends Model
+/// Modelo de categoría para representar las categorías de edad en el sistema.
+
+class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'start_date', 'end_date'];
-
+    protected $fillable = ['name', 'min_age', 'max_age'];
 
     // Relación uno a muchos con equipos
     public function teams()

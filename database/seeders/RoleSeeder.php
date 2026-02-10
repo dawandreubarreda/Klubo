@@ -14,7 +14,6 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        //Creación de los 4 tipos diferentes de roles que puede tener un user (Admin, coach, player y fan)
         $roles = [
             [
                 'name' => 'admin',
@@ -39,7 +38,8 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::create($role);
+            // Solo crea el rol si no existe
+            Role::firstOrCreate(['name' => $role['name']], $role);
         }
     }
 }

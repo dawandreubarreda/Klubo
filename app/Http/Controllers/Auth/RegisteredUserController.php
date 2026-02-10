@@ -59,6 +59,7 @@ class RegisteredUserController extends Controller
                 'before:today',
                 'after:1920-01-01'
             ],
+            'gender' => ['required', 'in:masculino,femenino,otro'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'address' => ['nullable', 'string', 'max:255'],
             'phone' => [
@@ -69,6 +70,8 @@ class RegisteredUserController extends Controller
             'dni.regex' => 'El DNI debe tener 8 dígitos y una letra (ej. 12345678Z) o formato NIE (X1234567L).',
             'phone.regex' => 'El teléfono debe tener exactamente 9 dígitos.',
             'birth_date.after' => 'La fecha de nacimiento debe ser posterior al 1 de enero de 1920.',
+            'gender.required' => 'El género es obligatorio.',
+            'gender.in' => 'Selecciona un género válido.',
             'name.regex' => 'El nombre solo puede contener letras y espacios.',
         ]);
 
@@ -77,6 +80,7 @@ class RegisteredUserController extends Controller
         'dni' => $request->dni,
         'email' => $request->email,
         'birth_date' => $request->birth_date,
+        'gender' => $request->gender,
         'address' => $request->address,
         'phone' => $request->phone,
         'password' => Hash::make($request->password),
