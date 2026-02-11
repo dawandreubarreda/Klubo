@@ -8,7 +8,9 @@
     @if($currentSeason)
         <div style="background: #dbeafe; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
             <strong>📅 Temporada actual:</strong> {{ $currentSeason->name }}
-            <a href="#" style="margin-left: 1rem;">Ver equipos</a>
+            <a href="{{ route('admin.seasons.teams', $currentSeason) }}" style="margin-left: 1rem;">
+                Ver equipos
+            </a>
         </div>
     @endif
 
@@ -43,7 +45,7 @@
                     <td>{{ $season->start_date }}</td>
                     <td>{{ $season->end_date }}</td>
                     <td>
-                        <a href="#">Ver equipos</a>
+                        <a href="{{ route('admin.seasons.teams', $season) }}">Ver equipos</a>
                     </td>
                 </tr>
                 @endforeach

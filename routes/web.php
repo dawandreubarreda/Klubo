@@ -33,9 +33,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/seasons', [SeasonController::class, 'index'])->name('admin.seasons.index');
     Route::get('/admin/seasons/create', [SeasonController::class, 'create'])->name('admin.seasons.create');
     Route::post('/admin/seasons', [SeasonController::class, 'store'])->name('admin.seasons.store');
+    Route::get('/admin/seasons/{season}/teams', [TeamController::class, 'showBySeason'])->name('admin.seasons.teams');
     
     // Rutas de gestión de equipos
     Route::get('/admin/teams', [TeamController::class, 'index'])->name('admin.teams.index');
+    Route::get('/admin/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
+    Route::post('/admin/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+    Route::get('/admin/teams/{team}/edit', [TeamController::class, 'edit'])->name('admin.teams.edit');
+    Route::put('/admin/teams/{team}', [TeamController::class, 'update'])->name('admin.teams.update');
+    Route::get('/admin/teams/{team}/members', [TeamController::class, 'manageMembers'])->name('admin.teams.members');
+    Route::post('/admin/teams/{team}/members', [TeamController::class, 'addMember'])->name('admin.teams.add-member');
+    Route::delete('/admin/teams/{team}/members', [TeamController::class, 'removeMember'])->name('admin.teams.remove-member');
     
     // Tablón de anuncios
     Route::get('/admin/news', function () {
