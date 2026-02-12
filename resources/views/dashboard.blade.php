@@ -21,7 +21,7 @@
     @if(auth()->user()->hasRole('coach'))
         <div class="coach-section">
             <h2>🏃 Área del Entrenador</h2>
-            <p>Gestiona tus jugadores y entrenamientos.</p>
+            <a href="{{ route('coach.dashboard') }}">Ir a mi panel de entrenador</a>
         </div>
     @endif
 

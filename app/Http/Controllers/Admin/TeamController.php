@@ -146,7 +146,7 @@ class TeamController extends Controller
     }
 
     // Validar que un jugador cumple con los requisitos de edad y género para un equipo específico.
-    private function validatePlayerEligibility(Team $team, User $user)
+    public function validatePlayerEligibility(Team $team, User $user)
     {
         if ($team->gender !== 'mixto') {
             if ($user->gender !== $team->gender) {

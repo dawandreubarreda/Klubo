@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Coach\CoachController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,20 +22,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Área del entrenador
+    Route::get('/coach/dashboard', [CoachController::class, 'dashboard'])->name('coach.dashboard');
+    Route::get('/coach/teams/{team}', [CoachController::class, 'showTeam'])->name('coach.teams.show');
+    Route::post('/coach/teams/{team}/players', [CoachController::class, 'addPlayer'])->name('coach.teams.add-player');
 });
 
 // Rutas de administración
-Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['auth', 'verified'])->group(function () {
     // Usamos UserController directamente (gracias al "use" arriba)
     Route::get('/admin/roles', [UserController::class, 'index'])->name('admin.roles');
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
-    
+
     // Rutas de gestión de temporadas
     Route::get('/admin/seasons', [SeasonController::class, 'index'])->name('admin.seasons.index');
     Route::get('/admin/seasons/create', [SeasonController::class, 'create'])->name('admin.seasons.create');
     Route::post('/admin/seasons', [SeasonController::class, 'store'])->name('admin.seasons.store');
     Route::get('/admin/seasons/{season}/teams', [TeamController::class, 'showBySeason'])->name('admin.seasons.teams');
-    
+
     // Rutas de gestión de equipos
     Route::get('/admin/teams', [TeamController::class, 'index'])->name('admin.teams.index');
     Route::get('/admin/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
@@ -44,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/teams/{team}/members', [TeamController::class, 'manageMembers'])->name('admin.teams.members');
     Route::post('/admin/teams/{team}/members', [TeamController::class, 'addMember'])->name('admin.teams.add-member');
     Route::delete('/admin/teams/{team}/members', [TeamController::class, 'removeMember'])->name('admin.teams.remove-member');
-    
+
     // Tablón de anuncios
     Route::get('/admin/news', function () {
         return "Tablón de anuncios (próximamente)";
