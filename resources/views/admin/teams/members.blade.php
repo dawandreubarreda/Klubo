@@ -43,35 +43,59 @@
         </table>
     @endif
 
-    <!-- Añadir nuevos miembros -->
-    <h2>Añadir nuevos miembros</h2>
-    <!-- Mostrar errores de validación -->
-    @if($errors->any())
-        <div style="background: #fee; color: #b91c1c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-            <strong>Error al añadir miembro:</strong>
-            @foreach($errors->all() as $error)
-                {{ $error }}<br>
+    <!-- Añadir jugadores -->
+<h2>Añadir jugadores</h2>
+@if($errors->has('player_user_id'))
+    <div style="background: #fee; color: #b91c1c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+        {{ $errors->first('player_user_id') }}
+    </div>
+@endif
+<form method="POST" action="{{ route('admin.teams.add-member', $team) }}">
+    @csrf
+    <input type="hidden" name="role_in_team" value="player">
+    <div style="margin-bottom: 1rem;">
+        <label for="player_user_id">Jugador</label>
+        <select name="user_id" id="player_user_id" style="width: 100%; padding: 0.5rem;">
+            <option value="">Selecciona un jugador elegible</option>
+            @foreach($eligiblePlayers as $player)
+                <option value="{{ $player->id }}">
+                    {{ $player->name }} ({{ $player->email }})
+                    @if($player->gender === 'masculino') ♂️
+                    @elseif($player->gender === 'femenino') ♀️
+                    @else ⚧️
+                    @endif
+                </option>
             @endforeach
+        </select>
+    </div>
+    <button type="submit" class="btn" style="background: #059669; color: white;">Añadir Jugador</button>
+</form>
+
+    <!-- Añadir entrenadores -->
+    <h2 style="margin-top: 2rem;">Añadir entrenadores</h2>
+    @if($errors->has('coach_user_id'))
+        <div style="background: #fee; color: #b91c1c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+            {{ $errors->first('coach_user_id') }}
         </div>
-    @endif  
-    <form method="POST" action="{{ route('admin.teams.add-member', $team) }}">
+    @endif
+    <form method="POST" action="{{ route('admin.teams.add-member', $team) }}" style="margin-top: 1rem;">
         @csrf
+        <input type="hidden" name="role_in_team" value="coach">
         <div style="margin-bottom: 1rem;">
-            <label for="user_id">Usuario</label>
-            <select name="user_id" required style="width: 100%; padding: 0.5rem;">
-                <option value="">Selecciona un usuario</option>
-                @foreach($availableUsers as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+            <label for="coach_user_id">Entrenador</label>
+            <select name="user_id" id="coach_user_id" style="width: 100%; padding: 0.5rem;">
+                <option value="">Selecciona un entrenador elegible</option>
+                @foreach($eligibleCoaches as $coach)
+                    <option value="{{ $coach->id }}">
+                        {{ $coach->name }} ({{ $coach->email }})
+                        @if($coach->gender === 'masculino') ♂️
+                        @elseif($coach->gender === 'femenino') ♀️
+                        @else ⚧️
+                        @endif
+                    </option>
                 @endforeach
             </select>
         </div>
-        <div style="margin-bottom: 1rem;">
-            <label for="role_in_team">Rol en el equipo</label>
-            <select name="role_in_team" required style="width: 100%; padding: 0.5rem;">
-                <option value="player">Jugador</option>
-                <option value="coach">Entrenador</option>
-            </select>
-        </div>
-        <button type="submit" class="btn">Añadir al equipo</button>
+        <button type="submit" class="btn" style="background: #7c3aed; color: white;">Añadir Entrenador</button>
     </form>
 @endsection

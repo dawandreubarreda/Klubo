@@ -25,7 +25,7 @@ class TeamController extends Controller
         $categories = Category::all();
         return view('admin.teams.create', compact('seasons', 'categories'));
     }
-    
+
     // Guardar un nuevo equipo en la base de datos.
     public function store(Request $request)
     {
@@ -55,7 +55,7 @@ class TeamController extends Controller
         $seasons = Season::all();
         $categories = Category::all();
         $redirectBack = $request->query('redirect_back');
-        
+
         return view('admin.teams.edit', compact('team', 'seasons', 'categories', 'redirectBack'));
     }
 
@@ -84,17 +84,26 @@ class TeamController extends Controller
     // Mostrar formulario para gestionar miembros de un equipo.
     public function manageMembers(Team $team)
     {
-        // Usuarios disponibles (que no están ya en el equipo)
+        // Usuarios que NO están en el equipo
         $availableUsers = User::whereDoesntHave('teams', function($query) use ($team) {
             $query->where('team_id', $team->id);
-        })->get();
+        })->with('roles')->get();
 
-        // Miembros actuales del equipo
+        // Jugadores elegibles: deben tener rol 'player' y cumplir requisitos de edad y género
+        $eligiblePlayers = $availableUsers->filter(function($user) use ($team) {
+            $hasPlayerRole = $user->roles->contains('name', 'player');
+            return $hasPlayerRole && $this->validatePlayerEligibility($team, $user);
+        });
+
+        // Entrenadores elegibles: solo necesitan tener rol 'coach' (género sin restricciones)
+        $eligibleCoaches = $availableUsers->filter(function($user) {
+            return $user->roles->contains('name', 'coach');
+        });
+
         $currentMembers = $team->users()->withPivot('role_in_team')->get();
 
-        return view('admin.teams.members', compact('team', 'availableUsers', 'currentMembers'));
+        return view('admin.teams.members', compact('team', 'eligiblePlayers', 'eligibleCoaches', 'currentMembers'));
     }
-
     // Agregar un miembro al equipo.
     public function addMember(Request $request, Team $team)
     {
@@ -106,19 +115,24 @@ class TeamController extends Controller
         $user = User::findOrFail($request->user_id);
 
         if ($team->users()->where('user_id', $user->id)->exists()) {
-            return back()->withErrors(['user_id' => 'Este usuario ya está en el equipo.']);
+            $errorField = $request->role_in_team === 'player' ? 'player_user_id' : 'coach_user_id';
+            return back()->withErrors([$errorField => 'Este usuario ya está en el equipo.']);
         }
-        
+
+        // Validar SOLO si es jugador
         if ($request->role_in_team === 'player') {
             if (!$this->validatePlayerEligibility($team, $user)) {
-                return back()->withErrors(['user_id' => 'Este usuario no cumple los requisitos de edad o género para este equipo.']);
+                return back()->withErrors(['player_user_id' => 'Este usuario no cumple los requisitos de edad o género para ser jugador en este equipo.']);
             }
         }
 
-        $team->users()->attach($user->id, ['role_in_team' => $request->role_in_team]);
-        return back()->with('success', 'Miembro añadido correctamente.');
-    }
+        // Si es entrenador, NO hay validación adicional (género libre)
 
+        $team->users()->attach($user->id, ['role_in_team' => $request->role_in_team]);
+
+        $message = $request->role_in_team === 'player' ? 'Jugador añadido correctamente.' : 'Entrenador añadido correctamente.';
+        return back()->with('success', $message);
+    }
     // Eliminar un miembro del equipo.
     public function removeMember(Request $request, Team $team)
     {
@@ -143,12 +157,12 @@ class TeamController extends Controller
         // Definir las fechas correctamente
         $userBirthDate = \Carbon\Carbon::parse($user->birth_date);
         $referenceDate = \Carbon\Carbon::parse($team->season->start_date);
-        
+
         // Calcular años cumplidos exactamente
         $userAge = $userBirthDate->diff($referenceDate)->y;
 
         $allowedCategories = $this->getAllowedCategories($team->category);
-        
+
         // Depuración: mostrar qué categorías se consideran permitidas
         $debugInfo = [
             'user_age' => $userAge,
@@ -164,7 +178,7 @@ class TeamController extends Controller
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -173,7 +187,7 @@ class TeamController extends Controller
     {
         // Obtener todas las categorías ordenadas por min_age
         $allCategories = Category::orderBy('min_age')->get();
-        
+
         // Encontrar el índice de la categoría del equipo
         $teamCategoryIndex = null;
         foreach ($allCategories as $index => $category) {
@@ -182,17 +196,67 @@ class TeamController extends Controller
                 break;
             }
         }
-        
+
         if ($teamCategoryIndex === null) {
             return collect([$teamCategory]);
         }
-        
+
         // Permitir la categoría del equipo + hasta 2 categorías inferiores
         $allowedCategories = [];
         for ($i = max(0, $teamCategoryIndex - 2); $i <= $teamCategoryIndex; $i++) {
             $allowedCategories[] = $allCategories[$i];
         }
-        
+
         return collect($allowedCategories);
+    }
+
+    // Obtener usuarios elegibles para ser añadidos al equipo (que no estén ya en el equipo y cumplan requisitos).
+    private function getEligibleUsers(Team $team)
+    {
+        return User::whereDoesntHave('teams', function($query) use ($team) {
+            $query->where('team_id', $team->id);
+        })->get()->filter(function($user) use ($team) {
+            // Los entrenadores siempre son elegibles
+            if (auth()->user()->hasRole('admin')) {
+                // Por ahora, permitimos que los admins puedan asignar cualquier usuario como coach
+                // Pero para jugadores, aplicamos validación
+                return true; // Temporalmente permitimos todos para simplificar
+            }
+
+            // Para jugadores, aplicamos validación completa
+            return $this->validatePlayerEligibility($team, $user);
+        });
+    }
+
+
+    // Obtener usuarios elegibles para ser añadidos al equipo (que no estén ya en el equipo y cumplan requisitos de edad/género).
+    private function getEligibleUsersForTeam(Team $team)
+    {
+        $users = User::whereDoesntHave('teams', function($query) use ($team) {
+            $query->where('team_id', $team->id);
+        })->get();
+
+        $eligibleUsers = collect();
+
+        foreach ($users as $user) {
+            // Siempre incluimos usuarios que pueden ser entrenadores
+            // Y también los que pueden ser jugadores válidos
+
+            // Verificar si cumple como jugador
+            $canBePlayer = $this->validatePlayerEligibility($team, $user);
+
+            // Siempre se puede asignar como entrenador (sin restricciones de edad/género)
+            // Pero respetamos el género si el equipo no es mixto
+            $canBeCoach = true;
+            if ($team->gender !== 'mixto') {
+                $canBeCoach = ($user->gender === $team->gender);
+            }
+
+            if ($canBePlayer || $canBeCoach) {
+                $eligibleUsers->push($user);
+            }
+        }
+
+        return $eligibleUsers;
     }
 }
