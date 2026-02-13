@@ -10,7 +10,13 @@
     @endif
 
     <h1>Gestionar {{ $team->name }}</h1>
-
+    
+    <!--Botón para volver al dashboard del coach-->
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ route('coach.dashboard') }}" class="btn" style="background: #64748b; color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">
+            ← Volver al dashboard
+        </a>
+    </div>
     <div style="margin-bottom: 2rem;">
         <strong>Temporada:</strong> {{ $team->season->name }}<br>
         <strong>Categoría:</strong> {{ $team->category->name }}<br>

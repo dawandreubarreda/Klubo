@@ -9,6 +9,7 @@ use App\Models\Season;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
@@ -217,7 +218,8 @@ class TeamController extends Controller
             $query->where('team_id', $team->id);
         })->get()->filter(function($user) use ($team) {
             // Los entrenadores siempre son elegibles
-            if (auth()->user()->hasRole('admin')) {
+            $currentUser = Auth::user();
+            if ($currentUser && $currentUser->hasRole('admin')) {
                 // Por ahora, permitimos que los admins puedan asignar cualquier usuario como coach
                 // Pero para jugadores, aplicamos validación
                 return true; // Temporalmente permitimos todos para simplificar
