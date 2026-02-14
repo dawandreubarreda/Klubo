@@ -11,7 +11,7 @@
             <h2>👨‍💼 Área del Administrador</h2>
             <ul>
                 <li><a href="{{ route('admin.roles') }}">Gestión de roles</a></li>
-                <li><a href="/admin/profiles">Gestión de perfiles</a></li>
+                <li><a href="{{ route('admin.profiles.index') }}">Gestión de perfiles</a></li>
                 <li><a href="{{ route('admin.seasons.index') }}">Gestionar temporadas</a></li>
                 <li><a href="{{ route('admin.teams.index') }}">Gestionar equipos</a></li>
             </ul>
@@ -31,6 +31,15 @@
             <a href="{{ route('player.dashboard') }}">Ir a mi panel de jugador</a>
         </div>
     @endif
+    
+    <!-- Enlace para editar perfil propio -->
+    <div class="section">
+        <h2>👤 Mi perfil</h2>
+        <p>Gestiona tus datos personales y preferencias.</p>
+        <a href="{{ route('profile.edit') }}" class="btn" style="background: #059669; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; display: inline-block;">
+            Editar mi perfil
+        </a>
+    </div>
 
     @if(auth()->user()->hasRole('fan'))
         <!-- Tablón de anuncios en el dashboard -->

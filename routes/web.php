@@ -21,6 +21,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Rutas protegidas (requieren autenticación)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/coach/dashboard', [CoachController::class, 'dashboard'])->name('coach.dashboard');
     Route::get('/coach/teams/{team}', [CoachController::class, 'showTeam'])->name('coach.teams.show');
     Route::post('/coach/teams/{team}/players', [CoachController::class, 'addPlayer'])->name('coach.teams.add-player');
+    
     // Gestión de asistencias
     Route::get('/coach/teams/{team}/attendances', [AttendanceController::class, 'index'])->name('coach.attendances.index');
     Route::post('/coach/teams/{team}/attendances', [AttendanceController::class, 'store'])->name('coach.attendances.store');
@@ -39,10 +41,15 @@ Route::middleware('auth')->group(function () {
     // Área del jugador
     Route::get('/player/dashboard', [PlayerController::class, 'dashboard'])->name('player.dashboard');
     Route::get('/player/teams/{team}/attendances', [PlayerController::class, 'showAttendances'])->name('player.attendances.show');
+
+    // Tablón de anuncios (rutas protegidas)
+    Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+    Route::post('/news/{newsPost}/comments', [NewsController::class, 'storeComment'])->name('news.comments.store');
+    Route::post('/news/{newsPost}/like', [NewsController::class, 'toggleLike'])->name('news.like.toggle');
 });
 
-// Rutas de administración
-    Route::middleware(['auth', 'verified'])->group(function () {
+// Rutas de administración (requieren auth + verified)
+Route::middleware(['auth', 'verified'])->group(function () {
     // Usamos UserController directamente (gracias al "use" arriba)
     Route::get('/admin/roles', [UserController::class, 'index'])->name('admin.roles');
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
@@ -63,15 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/teams/{team}/members', [TeamController::class, 'addMember'])->name('admin.teams.add-member');
     Route::delete('/admin/teams/{team}/members', [TeamController::class, 'removeMember'])->name('admin.teams.remove-member');
 
-    // Tablón de anuncios (público)
-Route::get('/news', [NewsController::class, 'index'])->name('news.index');
-
-// Rutas protegidas (requieren autenticación)
-    Route::middleware('auth')->group(function () {
-        Route::post('/news', [NewsController::class, 'store'])->name('news.store');
-        Route::post('/news/{newsPost}/comments', [NewsController::class, 'storeComment'])->name('news.comments.store');
-        Route::post('/news/{newsPost}/like', [NewsController::class, 'toggleLike'])->name('news.like.toggle');
-    });
+    //RUTAS DE PERFILES (USANDO UserController)
+    Route::get('/admin/profiles', [UserController::class, 'profilesIndex'])->name('admin.profiles.index');
+    Route::get('/admin/profiles/{user}/edit', [UserController::class, 'profilesEdit'])->name('admin.profiles.edit');
+    Route::put('/admin/profiles/{user}', [UserController::class, 'profilesUpdate'])->name('admin.profiles.update');
 });
+
+// Ruta pública del tablón de anuncios
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 
 require __DIR__.'/auth.php';

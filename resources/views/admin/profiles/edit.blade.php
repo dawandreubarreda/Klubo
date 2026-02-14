@@ -1,27 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Editar perfil')
+@section('title', 'Editar perfil - ' . $user->name)
 
 @section('content')
-    <h1>👤 Editar mi perfil</h1>
-
-    @if(session('status') === 'profile-updated')
-        <div style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-            ¡Perfil actualizado correctamente!
-        </div>
-    @endif
+    <h1>✏️ Editar perfil: {{ $user->name }}</h1>
 
     @if($errors->any())
         <div style="background: #fee; color: #b91c1c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-            @foreach($errors->all() as $error)
-                {{ $error }}<br>
-            @endforeach
+            <ul style="margin: 0; padding-left: 1rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
-    <form method="POST" action="{{ route('profile.update') }}">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ route('admin.profiles.index') }}" class="btn" style="background: #64748b; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px;">
+            ← Volver a perfiles
+        </a>
+    </div>
+
+    <form method="POST" action="{{ route('admin.profiles.update', $user) }}">
         @csrf
-        @method('PATCH')
+        @method('PUT')
 
         <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
             <!-- Nombre -->
@@ -30,7 +32,7 @@
                 <input type="text" 
                        name="name" 
                        id="name" 
-                       value="{{ old('name', auth()->user()->name) }}" 
+                       value="{{ old('name', $user->name) }}" 
                        required 
                        style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
@@ -41,7 +43,7 @@
                 <input type="email" 
                        name="email" 
                        id="email" 
-                       value="{{ old('email', auth()->user()->email) }}" 
+                       value="{{ old('email', $user->email) }}" 
                        required 
                        style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
@@ -52,7 +54,7 @@
                 <input type="text" 
                        name="phone" 
                        id="phone" 
-                       value="{{ old('phone', auth()->user()->phone) }}" 
+                       value="{{ old('phone', $user->phone) }}" 
                        style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
 
@@ -62,7 +64,7 @@
                 <input type="text" 
                        name="address" 
                        id="address" 
-                       value="{{ old('address', auth()->user()->address) }}" 
+                       value="{{ old('address', $user->address) }}" 
                        style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
 
@@ -72,7 +74,7 @@
                 <input type="date" 
                        name="birth_date" 
                        id="birth_date" 
-                       value="{{ old('birth_date', auth()->user()->birth_date) }}" 
+                       value="{{ old('birth_date', $user->birth_date) }}" 
                        required 
                        style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
             </div>
@@ -85,7 +87,7 @@
                         <input type="radio" 
                                name="gender" 
                                value="masculino" 
-                               @if(old('gender', auth()->user()->gender) == 'masculino') checked @endif
+                               @if(old('gender', $user->gender) == 'masculino') checked @endif
                                required>
                         Masculino ♂️
                     </label>
@@ -93,7 +95,7 @@
                         <input type="radio" 
                                name="gender" 
                                value="femenino" 
-                               @if(old('gender', auth()->user()->gender) == 'femenino') checked @endif
+                               @if(old('gender', $user->gender) == 'femenino') checked @endif
                                required>
                         Femenino ♀️
                     </label>
@@ -101,7 +103,7 @@
                         <input type="radio" 
                                name="gender" 
                                value="otro" 
-                               @if(old('gender', auth()->user()->gender) == 'otro') checked @endif
+                               @if(old('gender', $user->gender) == 'otro') checked @endif
                                required>
                         Otro ⚧️
                     </label>
@@ -111,22 +113,8 @@
 
         <button type="submit" 
                 class="btn" 
-                style="background: #059669; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold;">
+                style="background: #dc2626; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold;">
             Actualizar perfil
         </button>
     </form>
-
-    <!-- Enlace para eliminar cuenta -->
-    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-        <h3>❌ Eliminar cuenta</h3>
-        <p>Esta acción es irreversible y eliminará todos tus datos.</p>
-        <a href="#" onclick="document.getElementById('delete-form').submit(); return false;" 
-           style="color: #dc2626; text-decoration: underline;">
-            Eliminar mi cuenta
-        </a>
-        <form id="delete-form" method="POST" action="{{ route('profile.destroy') }}">
-            @csrf
-            @method('DELETE')
-        </form>
-    </div>
 @endsection
