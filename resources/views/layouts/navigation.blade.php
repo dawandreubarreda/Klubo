@@ -3,6 +3,8 @@
     <nav>
         <a href="/">Inicio</a>
         <a href="/roles">Roles</a>
+        <a href="{{ route('news.index') }}">📰 Tablón</a>
+        
         @guest
             <a href="/login">Iniciar sesión</a>
         @else

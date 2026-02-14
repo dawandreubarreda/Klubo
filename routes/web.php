@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Coach\CoachController;
 use App\Http\Controllers\Coach\AttendanceController;
 use App\Http\Controllers\Player\PlayerController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -62,9 +63,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/teams/{team}/members', [TeamController::class, 'addMember'])->name('admin.teams.add-member');
     Route::delete('/admin/teams/{team}/members', [TeamController::class, 'removeMember'])->name('admin.teams.remove-member');
 
-    // Tablón de anuncios
-    Route::get('/admin/news', function () {
-        return "Tablón de anuncios (próximamente)";
+    // Tablón de anuncios (público)
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+
+// Rutas protegidas (requieren autenticación)
+    Route::middleware('auth')->group(function () {
+        Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+        Route::post('/news/{newsPost}/comments', [NewsController::class, 'storeComment'])->name('news.comments.store');
+        Route::post('/news/{newsPost}/like', [NewsController::class, 'toggleLike'])->name('news.like.toggle');
     });
 });
 

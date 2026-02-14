@@ -77,4 +77,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function newsPosts()
+    {
+        return $this->hasMany(NewsPost::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likedNewsPosts()
+    {
+        return $this->belongsToMany(NewsPost::class, 'news_post_user_likes', 'user_id', 'news_post_id');
+    }
 }
