@@ -37,15 +37,14 @@
 
     <!-- Acciones del equipo -->
 <div style="margin-top: 2rem;">
-    <h3>Acciones</h3>
-    <a href="{{ route('coach.teams.add-player', $team) }}" class="btn" style="background: #059669; color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-right: 1rem;">
-        ➕ Añadir jugador
-    </a>
+    
     <a href="{{ route('coach.attendances.index', $team) }}" class="btn" style="background: #7c3aed; color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">
         📊 Gestionar asistencias
     </a>
 </div>
 
+    <!-- Formulario para añadir jugadores -->
+    <h2 style="margin-top: 2rem;">Añadir jugador al equipo</h2>
     @if($availablePlayers->isEmpty())
         <p>No hay jugadores elegibles disponibles.</p>
     @else

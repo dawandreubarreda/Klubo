@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Coach\CoachController;
 use App\Http\Controllers\Coach\AttendanceController;
+use App\Http\Controllers\Player\PlayerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/coach/teams/{team}/attendances', [AttendanceController::class, 'store'])->name('coach.attendances.store');
     Route::put('/coach/teams/{team}/attendances', [AttendanceController::class, 'update'])->name('coach.attendances.update');
     Route::delete('/coach/teams/{team}/attendances/{training}', [AttendanceController::class, 'destroy'])->name('coach.attendances.destroy');
+
+    // Área del jugador
+    Route::get('/player/dashboard', [PlayerController::class, 'dashboard'])->name('player.dashboard');
+    Route::get('/player/teams/{team}/attendances', [PlayerController::class, 'showAttendances'])->name('player.attendances.show');
 });
 
 // Rutas de administración

@@ -27,8 +27,8 @@
 
     @if(auth()->user()->hasRole('player'))
         <div class="player-section">
-            <h2>🎾 Área del Jugador</h2>
-            <p>Consulta tus partidos y estadísticas.</p>
+            <h2>🏃 Área del Jugador</h2>
+            <a href="{{ route('player.dashboard') }}">Ir a mi panel de jugador</a>
         </div>
     @endif
 
