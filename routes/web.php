@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Coach\CoachController;
+use App\Http\Controllers\Coach\AttendanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/coach/dashboard', [CoachController::class, 'dashboard'])->name('coach.dashboard');
     Route::get('/coach/teams/{team}', [CoachController::class, 'showTeam'])->name('coach.teams.show');
     Route::post('/coach/teams/{team}/players', [CoachController::class, 'addPlayer'])->name('coach.teams.add-player');
+    // Gestión de asistencias
+    Route::get('/coach/teams/{team}/attendances', [AttendanceController::class, 'index'])->name('coach.attendances.index');
+    Route::post('/coach/teams/{team}/attendances', [AttendanceController::class, 'store'])->name('coach.attendances.store');
+    Route::put('/coach/teams/{team}/attendances', [AttendanceController::class, 'update'])->name('coach.attendances.update');
+    Route::delete('/coach/teams/{team}/attendances/{training}', [AttendanceController::class, 'destroy'])->name('coach.attendances.destroy');
 });
 
 // Rutas de administración
@@ -34,7 +40,7 @@ Route::middleware('auth')->group(function () {
     // Usamos UserController directamente (gracias al "use" arriba)
     Route::get('/admin/roles', [UserController::class, 'index'])->name('admin.roles');
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
-
+    
     // Rutas de gestión de temporadas
     Route::get('/admin/seasons', [SeasonController::class, 'index'])->name('admin.seasons.index');
     Route::get('/admin/seasons/create', [SeasonController::class, 'create'])->name('admin.seasons.create');

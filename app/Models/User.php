@@ -71,4 +71,10 @@ class User extends Authenticatable
             ->withPivot('role_in_team')
             ->withTimestamps();
     }
+
+    // Relación uno a muchos con asistencias.
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

@@ -28,4 +28,10 @@ class Team extends Model
             ->withPivot('role_in_team')
             ->withTimestamps();
     }
+
+    // Relación uno a muchos con entrenamientos.
+    public function trainings()
+    {
+        return $this->hasMany(Training::class);
+    }
 }

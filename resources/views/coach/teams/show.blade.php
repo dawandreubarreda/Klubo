@@ -35,13 +35,16 @@
         </ul>
     @endif
 
-    <!-- Añadir nuevos jugadores -->
-    <h2>Añadir jugadores</h2>
-    @if($errors->has('user_id'))
-        <div style="background: #fee; color: #b91c1c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
-            {{ $errors->first('user_id') }}
-        </div>
-    @endif
+    <!-- Acciones del equipo -->
+<div style="margin-top: 2rem;">
+    <h3>Acciones</h3>
+    <a href="{{ route('coach.teams.add-player', $team) }}" class="btn" style="background: #059669; color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; margin-right: 1rem;">
+        ➕ Añadir jugador
+    </a>
+    <a href="{{ route('coach.attendances.index', $team) }}" class="btn" style="background: #7c3aed; color: white; display: inline-block; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">
+        📊 Gestionar asistencias
+    </a>
+</div>
 
     @if($availablePlayers->isEmpty())
         <p>No hay jugadores elegibles disponibles.</p>
@@ -66,4 +69,5 @@
             <button type="submit" class="btn" style="background: #059669; color: white;">Añadir Jugador</button>
         </form>
     @endif
+    
 @endsection
