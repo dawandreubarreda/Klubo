@@ -41,11 +41,11 @@ cd Klubo
 ```bash
 composer install
 ```
-1) Instalar dependencias de PHP con Composer
+2) Copiar el archivo de entorno
 
 
 ```bash
-composer install
+cp .env.example .env
 ```
 3) Configurar variables de entorno
 
