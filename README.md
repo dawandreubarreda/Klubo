@@ -82,6 +82,6 @@ Esto levantará el servidor en:
 ```bash
 http://localhost:8000
 ```
-![Diagrama](Diagrama_E-R.png)
+![Diagrama Entidad Relacion](Diagrama.png)
 
 
