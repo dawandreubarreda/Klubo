@@ -59,7 +59,6 @@ DB_PORT=3306
 DB_DATABASE=tu_basededatos
 DB_USERNAME=tu_usuario
 DB_PASSWORD=tu_contraseña
-
 ```
 4) Generar clave de aplicación de Laravel
 
@@ -72,7 +71,6 @@ php artisan key:generate
 
 ```bash
 php artisan migrate --seed
-
 ```
 ▶️ Ejecutar la aplicación
 
