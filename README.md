@@ -25,3 +25,12 @@
 - PHP 8.1 o superior
 - MySQL 5.7 o superior
 - Composer
+
+  
+## 💾 Instalación
+
+Clona el repositorio y configura el proyecto:
+
+```bash
+git clone https://github.com/dawandreubarreda/Klubo.git
+cd Klubo
