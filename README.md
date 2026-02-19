@@ -34,3 +34,56 @@ Clona el repositorio y configura el proyecto:
 ```bash
 git clone https://github.com/dawandreubarreda/Klubo.git
 cd Klubo
+```
+1) Instalar dependencias de PHP con Composer
+
+
+```bash
+composer install
+```
+1) Instalar dependencias de PHP con Composer
+
+
+```bash
+composer install
+```
+3) Configurar variables de entorno
+
+Abre el archivo .env y ajusta la configuración de la base de datos:
+
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tu_basededatos
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+
+```
+4) Generar clave de aplicación de Laravel
+
+
+```bash
+php artisan key:generate
+```
+5) Ejecutar migraciones y seeders
+
+
+```bash
+php artisan migrate --seed
+
+```
+▶️ Ejecutar la aplicación
+
+
+```bash
+php artisan serve
+```
+Esto levantará el servidor en:
+```bash
+http://localhost:8000
+```
+
+
+
